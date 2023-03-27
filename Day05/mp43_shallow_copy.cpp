@@ -1,9 +1,10 @@
-// 소멸자
-// 계속 인스턴스 오류뜸. 해결방법: #define _CRT_SECURE_NO_WARNINGS 헤드 추가, const char* myname char를 상수화 시켜줌
+//shoallow copy : 얕은복사( 멤버 대 멤버 복사)
+// 멤버변수가 힙의 메모리 공간을 참조하는 경우 문제가됨
+//-> 나중에 해제할때 문제가 되기 때문
+#define _CRT_SECURE_NO_WARNINGS
+//#pragma warning(disable:4996)
 #include <iostream>
 #include <cstring>
-#define _CRT_SECURE_NO_WARNINGS
-
 using namespace std;
 
 class Person
@@ -12,9 +13,9 @@ private:
 	char* name;
 	int age;
 public:
-	Person(const char* myname, int myage) // const 상수화
+	Person(const char* myname, int myage)
 	{
-		int len = strlen(myname) + 1; // 불필요한 메모리 공간 낭비, 부족을 막기위해 문자열 길이만큼 메모리공간을 동적할당하고 있음
+		int len = strlen(myname) + 1;
 		name = new char[len];
 		strcpy(name, myname);
 		age = myage;
@@ -24,7 +25,7 @@ public:
 		cout << "이름: " << name << endl;
 		cout << "나이: " << age << endl;
 	}
-	~Person() // 소멸자. 생성자에서 할당한 메모리 공간의 소멸에 대한 코드 삽입
+	~Person()
 	{
 		delete[]name;
 		cout << "called destructor!" << endl;
@@ -34,7 +35,7 @@ public:
 int main()
 {
 	Person man1("Lee dong woo", 29);
-	Person man2("Jang dong gun", 41);
+	Person man2 = man1;
 	man1.ShowPersonInfo();
 	man2.ShowPersonInfo();
 	return 0;
